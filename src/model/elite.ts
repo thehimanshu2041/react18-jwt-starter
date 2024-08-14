@@ -1,0 +1,1 @@
+export const ELITE_TOKEN = 'elite_token';
