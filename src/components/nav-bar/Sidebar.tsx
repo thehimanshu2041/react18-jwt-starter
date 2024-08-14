@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import Avatar from 'react-avatar';
 import { Link, useLocation } from 'react-router-dom';
-import { Avatar, Button } from '@mui/material';
 import { useAuth } from './../../contexts/AuthContext';
 import { icons } from '../../constants/icons/icons';
 import { menus } from '../../constants/menus/menus';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPowerOff } from '@fortawesome/free-solid-svg-icons';;
-
+import { faPowerOff } from '@fortawesome/free-solid-svg-icons'; import EliteButton from '../EliteButton';
+;
 
 
 // Define types for props
@@ -27,7 +27,7 @@ export default function Sidebar({ sidebarCollapsed, setSidebarCollapsed }: Sideb
     const [collapseShow, setCollapseShow] = useState<string>('hidden');
     const location = useLocation();
     const currentPath = location.pathname;
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const [hoveredIndex, setHoveredIndex] = useState<boolean>(false);
@@ -42,9 +42,14 @@ export default function Sidebar({ sidebarCollapsed, setSidebarCollapsed }: Sideb
 
     return (
         <div>
-            <header className="fixed top-0 right-0 p-4 bg-blue shadow-md w-full z-10 hidden md:block">
-                <div className="container mx-auto flex justify-end">
-                    <FontAwesomeIcon icon={faPowerOff} className="text-red cursor-pointer" onClick={logout} />
+            <header className="fixed top-0 right-0 p-2 bg-blue shadow-md w-full z-10 hidden md:block">
+                <div className="container mx-auto flex justify-end items-center">
+                    <button
+                        className='cursor-pointer text-white text-xl hover:bg-transparent px-2'
+                    >
+                        <i className='fas fa-sign-out-alt' onClick={logout}></i>
+                    </button>
+                    <Avatar name={user?.username} round={true} size='40' />
                 </div>
             </header>
             <nav
@@ -95,19 +100,17 @@ export default function Sidebar({ sidebarCollapsed, setSidebarCollapsed }: Sideb
                         <div className='md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-blueGray-200'>
                             <div className='flex flex-wrap'>
                                 <div className='w-6/12 flex flex-row align-items-center'>
-                                    <Avatar alt='Profile' src='src' />
-                                    <p className='text-white ml-1'>username</p>
+                                    <Avatar name={user?.username} round={true} size='40' />
+                                    <p className='text-white ml-1 mt-3'>{user?.username}</p>
                                 </div>
                                 <div className='w-6/12 flex justify-end'>
                                     <button
-                                        type='button'
-                                        className='cursor-pointer text-white  md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent'
+                                        className='cursor-pointer text-white text-xl hover:bg-transparent px-2'
                                     >
                                         <i className='fas fa-sign-out-alt' onClick={logout}></i>
                                     </button>
                                     <button
-                                        type='button'
-                                        className='cursor-pointer text-white  md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent'
+                                        className='cursor-pointer text-white text-xl hover:bg-transparent'
                                         onClick={() => setCollapseShow('hidden')}
                                     >
                                         <i className='fas fa-times'></i>

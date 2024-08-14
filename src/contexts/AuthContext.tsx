@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import restUtils from '../utils/restUtils';
-import { Auth, AuthR } from '../model/auth.model';
+import { Auth, AuthR, AuthUser } from '../model/auth.model';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { ELITE_TOKEN } from '../model/elite';
@@ -13,9 +13,11 @@ interface AuthContextProps {
     login: (payload: Auth) => Promise<boolean>;
     logout: () => void;
     token: string | null;
+    user: AuthUser | null;
 }
 
 interface JwtPayload {
+    sub: string;
     exp: number;
     [key: string]: any;
 }
@@ -51,7 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
-        console.log('useEffect');
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
@@ -76,11 +77,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const getloggedInUser = (token: string | null): AuthUser | null => {
+        if (!token) {
+            return null;
+        }
+
+        try {
+            const decoded: JwtPayload = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            if (decoded.exp < currentTime) {
+                throw new Error('Token expired.');
+            }
+            const authUser = {
+                username: decoded.sub
+            } as AuthUser;
+            return authUser;
+        } catch (error) {
+            logout();
+            return null;
+        }
+    };
+
     const value = {
         isAuthenticated: isTokenValid(token),
         token,
         login,
         logout,
+        user: getloggedInUser(token)
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -86,7 +86,7 @@ const Login: React.FC = () => {
                                                         error={!!touched.password && !!errors.password}
                                                         helperText={!!touched.password && errors.password}
                                                     />
-                                                    <EliteButton type='submit' className="mt-5"> Login </EliteButton>
+                                                    <EliteButton fullWidth type='submit' className="mt-5"> Login </EliteButton>
                                                 </div>
                                             </div>
 
@@ -94,7 +94,7 @@ const Login: React.FC = () => {
                                                 <div className="text-center leading-none text-gray-600 mt-3">
                                                     Or Login with OAUTH0
                                                 </div>
-                                                <EliteButton className="mt-5"> OAUTH0 </EliteButton>
+                                                <EliteButton fullWidth className="mt-5"> OAUTH0 </EliteButton>
                                             </div>
                                         </div>
                                     </div>
